@@ -1,0 +1,39 @@
+body {
+	background : #FFFFFF;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: .9em;
+	color: #000;
+	text-decoration: none;
+	margin:30;
+	padding:30;
+	width:600px;
+}
+
+#map {
+    width: 600px;
+    height: 400px;
+    border: 1px solid #ccc;
+}
+
+#overlay_map{
+  width:128px; height:128px; 
+  border: solid 3px gray; 
+  border-width: 3px 0 1px 3px;
+	}
+
+#status {
+	height: 20px;
+}
+
+.about  {
+   width: 400px; 
+ }
+
+
+input.bigtext {
+	color:#7A8872;
+	padding:10px;
+	width:580px;
+	font-size: 150%;
+	text-align: center;
+}
