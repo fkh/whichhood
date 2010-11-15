@@ -1,0 +1,6 @@
+RewriteEngine on
+RewriteBase /
+
+#RewriteRule /view.php /name/ [R]
+RewriteRule ^name/([^/\.]+)$ view.php?neighborhood=$1
+RewriteRule ^name/ view.php [L] 
