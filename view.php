@@ -1,4 +1,16 @@
+<?php 
 
+if (isset($_POST['neighborhood']) && $_POST['neighborhood'] <> '') {
+
+	$redirect = $_POST['neighborhood'];
+	
+	$redirect = str_replace(" ", "+", $redirect);
+	
+	header( 'Location: http://brooklyn.whichhood.org/name/' . $redirect );
+	
+} 
+
+?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
@@ -107,7 +119,7 @@
 	$names = getNeighborhoods();
 	
 	
-	print "<form action='view.php' method='GET'>";
+	print "<form action='http://brooklyn.whichhood.org/view.php' method='POST'>";
 	print "<select name='neighborhood' onchange='submit();'";
 	
 	print "<option value=''> <em>choose...</em></option>";
