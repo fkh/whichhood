@@ -52,7 +52,7 @@
 </form>
 
 <p><a href="https://whichhood.uservoice.com/" onclick="UserVoice.Popin.show(uservoiceOptions); return false;">Feedback / ideas</a>
- | <a href="http://brooklyn.whichhood.org/view.php?neighborhood=Greenpoint">View results</a>.</p>
+ | <a href="http://brooklyn.whichhood.org/name/Greenpoint">View results</a>.</p>
 
 <div id=about>
 <p>WhichHood.org is an experimental sketch for a collaborative neighborhood mapping tool.</p>
