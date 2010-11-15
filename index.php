@@ -14,127 +14,10 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 	<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
 	<script src="ol/OpenLayers.js"></script>
+	<script src="protovis-d3.2.js"></script>	
+	<script src="map.js"></script>	
 	
-	<script type="text/javascript" charset="utf-8">
-	$(function() {
-		var map;
-		var markersArray = [];
-		var initialCenter = new google.maps.LatLng(-74,40);
-		var bBCode;
-		
-	    var mapOpts = {
-	      zoom: 15,
-	      center: initialCenter,
-	      mapTypeId: google.maps.MapTypeId.ROADMAP,
-		  mapTypeControl: false, 
-		  navigationControl: true,
-		  navigationControlOptions: {
-		    style: google.maps.NavigationControlStyle.SMALL
-		  }
-	
-	    }
-	
-	
-	    map = new google.maps.Map(document.getElementById("map"), mapOpts);
-	
-		var overlayMap = new google.maps.Map(
-		  document.getElementById('overlay_map'), {
-		  mapTypeId: google.maps.MapTypeId.ROADMAP, 
-		  disableDefaultUI: true,
-		  zoom: 11,
-	      center: initialCenter
-		});	
-	
-		
-		var overDiv = overlayMap.getDiv();
-		map.getDiv().appendChild(overDiv);
-		overDiv.style.position = "absolute";
-		overDiv.style.right = "0px";
-		overDiv.style.bottom = "14px";
-		overDiv.style.zIndex = 10;
-
-		google.maps.event.addListener(overlayMap, 'idle', function() {
-		  overlayMap.getDiv().style.zIndex = 10;
-		});
-		
-		overlayMap.bindTo('center', map, 'center');
-		
-		var markers = [];
-		
-		getPoint();
-	
-		function getPoint() {
-			$('#add-block input[name=neighborhood]').focus();
-			$.getJSON("point.php", function(data){
-			    centerMap(data.x, data.y);
-				bBCode = data.id;
-			 });
-		};
-	
-		function centerMap(lon, lat) {
-			mapCenter = new google.maps.LatLng(lat, lon);
-			map.setCenter(mapCenter);
-			map.setZoom(15);
-			clearOverlays();
-			var marker = new google.maps.Marker({
-		        position: mapCenter, 
-		        map: map
-		    });   
-		
-			markers.push(marker);
-		
-		}
-		
-		function clearOverlays() { //tidy up the map and info pane
-			if (markers) {
-			    for (i in markers) {
-			      markers[i].setMap(null);
-			    }
-			  }
-		}
-		
-		function saveName() {
-			
-		}
-		
-		$("#add-block").submit(function(){ 
-		givenName = $("#add-block input[name=neighborhood]").val();
-		if 	(givenName == "" || givenName == null || !isNaN(givenName) || givenName.charAt(0) == ' ') {
-			$('#add-block input[name=neighborhood]').focus();
-			return false; 
-		} else {
-		  passName(); 
-		  return false; 
-		}
-		});
-	
-		function passName() {
-	//		$('#status').text('Saving...');
-	//		$('#status').show();
-			
-			var data = $("#add-block input[name=neighborhood]").serializeArray(); 
-			data[data.length] = {name:'id', value: bBCode};
-				  $.post("http://brooklyn.whichhood.org/new.php", data, function(json){ 
-				    if (json.status =="fail") { 
-				    	// error here
-				}
-				    if (json.status =="success") { 
-				 		//something here
-				    } 
-				  }, "json"); 
-				
-					$('#add-block input[name=neighborhood]').focus();
-					getPoint();
-					
-		};
-		
-		$('#skip').bind('click', function() {
-             getPoint();
-          });
-		
-	});
-		
-	</script>	
+	<script src="charts.js"></script>
 	
 	<script type="text/javascript">
 
@@ -158,38 +41,50 @@
 	<h1><a name="top"></a>Which neighborhood is this block in?</h1>
 <div id="map"></div>
 <div id="overlay_map"></div>
-<a href="#about">About</a>
 <form id="add-block" action="new.php" enctype="multipart/form-data" method="POST" name="addform">
 <p><input type="text" name="neighborhood" value="neighborhood" class="bigtext" onFocus="this.value='';"></input></p>
 <input  type="hidden" name="lng" value="" ></input>
 <input type="submit" value="Name it!" style="background: white; color: black; font-size: 1.2em">
 <input type="button" id="skip" value="Not sure, skip it." style="background: white; color: black; font-size: 1.2em">
 
+<span id=sparkline></span>
+
 </form>
-<br><br><br><br>
-<p><a href="#about">About</a> | Get involved | Data</p>
+
+<p><a href="https://whichhood.uservoice.com/" onclick="UserVoice.Popin.show(uservoiceOptions); return false;">Feedback / ideas</a>
+ | <a href="http://brooklyn.whichhood.org/view.php?neighborhood=Greenpoint">View results</a>.</p>
 
 <div id=about>
-<p><a name="about"></a><strong>About</strong></p>
-<p>WhichHood.org is an experimental sketch for a collaborative neighborhood mapping tool. It's an in-progress hack by @fkh and @harupeanut from the Great Urban Hack, November 6/7. <a href="http://ietherpad.com/9nCYFyqftE">Read the hackathon task list</a>.</p>
+<p>WhichHood.org is an experimental sketch for a collaborative neighborhood mapping tool.</p>
 <p>High-quality neighborhood boundaries could form the basis for many civic apps -- news, issue reporting, local retail, planning, etc. But those maps don't exist. Any available data typically represent an administrative or real estate focused view. The "official" boundaries don't adapt and grow as rapidly as neighborhoods do in our daily use. What if a community data source existed, generated from thousands of individual contributions? What if adding data to that resource was kinda fun? Maybe a bit competitive? A game?</p>
 
-<p>[Why drawing boundaries is too hard, how these points could be used]</p>
+<p>Drawing actual boundaries for neighborhoods is hard: you don't always know the other side of a neighborhood edge, only the one closest to you. Instead, whichhood.org asks you to identify neighborhoods block by block.</p>
+
+<p>Missing right now, but definitely needed, is a way to export the results as points or calculated polygons. And some way to bias the area you focus on, so that you can contribute to the places you know best. What else? <a href="http://whichhood.uservoice.com/">Contribute your feature ideas, or vote on existing ones.</a>
 	
-<p><a href="#top">Top</a></p>.
-
-<p><a name="data"></a><strong>Get involved</strong></p>
-<p>[link to githut and roadmap] </p>
-<p><a href="#top">Top</a></p>.
-
-<p>
-<a name="data"></a><strong>Data</strong></p>
-<p>[link to data download and latest snapshots].</p>
-<p><a href="#top">Top</a></p>.
-
+<p>whichhood.org was created by <a href="http://holobiont.org">Holobiont</a> at the Great Urban Hack, November 6/7, 2010.
 </div>
 
-
+<script type="text/javascript">
+  var uservoiceOptions = {
+    key: 'whichhood',
+    host: 'whichhood.uservoice.com', 
+    forum: '86245',
+    alignment: 'right',
+    background_color:'#FF0000', 
+    text_color: 'white',
+    hover_color: '#0066CC',
+    lang: 'en',
+    showTab: true
+  };
+  function _loadUserVoice() {
+    var s = document.createElement('script');
+    s.src = ("https:" == document.location.protocol ? "https://" : "http://") + "cdn.uservoice.com/javascripts/widgets/tab.js";
+    document.getElementsByTagName('head')[0].appendChild(s);
+  }
+  _loadSuper = window.onload;
+  window.onload = (typeof window.onload != 'function') ? _loadUserVoice : function() { _loadSuper(); _loadUserVoice(); };
+</script>
 </body>
 </html>
                                                                        	
