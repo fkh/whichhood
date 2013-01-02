@@ -41,6 +41,7 @@ $(document).ready(function() {
   // load first point once user is ready to start  
   $('#start').click(function (event){ 
   getPoint();
+  $('#nabearea').focus();
   });
   
   // intercept the form submission
