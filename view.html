@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>view</title>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>	
+	
+</head>
+<body>
+
+<script type="text/javascript">
+
+$(document).ready(function() { 
+  
+  
+  $.getJSON('results.php', function(data) {
+    
+    var items = [];
+    var map_url = "http://fkh.cartodb.com/tables/bkblocks/embed_map?title=true&description=false&search=false&shareable=false&sql=SELECT%20bkblocks.cartodb_id%2C%20bkblocks.the_geom_webmercator%2C%20names.neighborhood%20FROM%20bkblocks%2C%20names%20where%20bkblocks.ID%20%3D%20names.block%20and%20names.neighborhood%20LIKE%20'%25"
+    
+    $.each(data.rows, function(key, val) {
+        items.push('<li id="' + key + '"><a href="' + map_url + val.neighborhood + '%25\'">'+ val.neighborhood + '</a></li>');
+      });
+      $('<ul/>', {
+         'class': 'places',
+         html: items.join('')
+       }).appendTo('body');
+  });
+
+  });
+  
+</script>
+</body>
+</html>

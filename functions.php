@@ -1,5 +1,7 @@
 <?php
 
+getNeighborhoods();
+
 function carto($query, $geojson) {
   
   // run any cartodb query
@@ -80,22 +82,16 @@ function countNames() {
 	return $totalCount;
 }
 
+//returns a list of neighborhood names, where more than one marker has been named.
+function getNeighborhoods() { 	
 
-function getNeighborhoods() {
-	//returns a list of neighborhood names, where more than one marker has been named.
-	$db = dbConnect();
-	
-	$rs = $db->Execute('select count(*) as "Number", names.neighborhood from names group by names.neighborhood having count(*) > 1 order by names.neighborhood ASC;');
-	
-	$names = array();
-	
-	while ($row = $rs->FetchNextObject()) {
-		
-		array_push($names, $row->NEIGHBORHOOD);
+	$sql = 'select count(*) as "Number", names.neighborhood from names group by names.neighborhood having count(*) > 1 order by names.neighborhood ASC';
 
-	}
-	
+	$names = carto($sql, FALSE);
+
 	return $names;
+  
+	//SELECT bkblocks.the_geom_webmercator, names.neighborhood FROM bkblocks, names where bkblocks.ID = names.block and names.neighborhood like '%Park Slope%' 
 	
 }
 
@@ -129,5 +125,7 @@ function stats(){
 	
 	
 }
+
+
 
 ?>
