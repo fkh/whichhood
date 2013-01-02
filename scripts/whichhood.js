@@ -1,6 +1,8 @@
 var geojsonLayer = new L.geoJson();	
 var markers = new L.featureGroup();
 
+//-- FUNCTIONS --//
+
 // get a point from the database
 function getPoint() {
   
@@ -17,14 +19,12 @@ function getPoint() {
   });
 };
 
-
-//-- FUNCTIONS --//
-
 // geojson coords are reversed, so swap them and pan to the location of the recently-added marker
 // also update the hidden blockid field with the bbcode of the recently-gathered point
 function onEachFeature(feature, layer) {
   var pointLoc = feature.geometry.coordinates.reverse();
   map.panTo(pointLoc); 
+  map.setZoom(13);
   $("#neighborhood input[name=block]").val(feature.properties.bbcode);
 }
 
@@ -60,5 +60,10 @@ $(document).ready(function() {
   	  return false; 
   	}
   	});
+  	
+  //skip if not sure
+  $('#skip').bind('click', function() {
+    getPoint();
+  });
 
 });
