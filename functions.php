@@ -1,22 +1,67 @@
 <?php
 
-function getPoint() {
+function carto($query, $geojson) {
+  
+  // run any cartodb query
+  
+  $api_key = '74921862200323be9009bcf748adfdee8f5e0a57';
+  $carto_root = 'http://fkh.cartodb.com/api/v2/sql?';
+  
+  if ($geojson == TRUE) {
+    $format = "format=GeoJSON&";
+  }
+  
+  $sql_query = urlencode($query);
 
-	$db = dbConnect();
-	
-	$rs = $db->Execute('select * from blocks order by random() limit 1;'); 
-	
-	while ($row = $rs->FetchNextObject()) {
-		$x = $row->X;
-		$y = $row->Y;
-		$id = $row->ID;
-	}
-	
-	$blockPoint = array(x => $x, y => $y, id => $id);
+  $carto_url = $carto_root . $format . "q=" . $sql_query . "&api_key=" . $api_key ;
 
-	return $blockPoint;
+  // doing the curl...
+  $ch = curl_init();
+  
+  curl_setopt($ch, CURLOPT_URL, $carto_url);
+  curl_setopt($ch, CURLOPT_HEADER, FALSE);
+  curl_setopt($ch, CURLOPT_VERBOSE, FALSE);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+  
+  //print $carto_url;
+  
+  $carto_result = curl_exec($ch);
+  
+  // close cURL resource, and free up system resources
+  curl_close($ch);
+
+  return $carto_result;
+  
 }
 
+
+// get the random point to seed the map, called by point.php
+
+function getRandomPoint() {
+  
+  //prevent query caching by fetching a random point
+  $cartodbid = rand(1,8408);
+  $get_random_point = "SELECT * FROM bkblocks WHERE cartodb_id = " . $cartodbid . " limit 1";
+  $result = carto($get_random_point, TRUE);
+  
+	return $result;
+	
+}
+
+
+// construct a url to insert a point into the db
+
+function addNeighborhoodName($name) {
+  
+  $timestamp = time();
+  
+  $sql = "INSERT INTO NAMES (neighborhood, timestamp) VALUES ('" . $name . "', " . $timestamp . ")";
+  
+  //echo $sql;
+
+  carto($sql, FALSE);
+  
+}
 
 
 function countNames() {
