@@ -43,7 +43,6 @@ function getRandomPoint() {
   $cartodbid = rand(1,8408);
   $get_random_point = "SELECT * FROM bkblocks WHERE cartodb_id = " . $cartodbid . " limit 1";
   $result = carto($get_random_point, TRUE);
-  
 	return $result;
 	
 }
@@ -51,14 +50,16 @@ function getRandomPoint() {
 
 // construct a url to insert a point into the db
 
-function addNeighborhoodName($name) {
-  
+function addNeighborhoodName($name, $block) {
+
   $timestamp = time();
   
-  $sql = "INSERT INTO NAMES (neighborhood, timestamp) VALUES ('" . $name . "', " . $timestamp . ")";
+  $sql = "INSERT INTO NAMES (neighborhood, block, timestamp) VALUES (";
+  $sql .= "'" . $name . "'" ;
+  $sql .= ", '" . $block . "' " ;
+  $sql .= ", " . $timestamp ; 
+  $sql .= ")";
   
-  //echo $sql;
-
   carto($sql, FALSE);
   
 }
