@@ -1,22 +1,11 @@
 <?php
 
-include "konnect.php";
+include('functions.php');
 
-print_r($_POST);
+$nabe = $_POST['neighborhood'];
 
-if ($_POST['id'] > '0') { 
+$clean = mysql_real_escape_string($nabe);
 
-	$db = dbConnect();
-	//$db->Connect('names');
-	
-	$safenabe = $db->qstr($_POST['neighborhood']);
-	
-	$record["block"] = $_POST['id']; 
-    $record["neighborhood"] = $safenabe; 
-    $record["timestamp"] = time(); 
-    $insertSQL = $db->AutoExecute('names', $record, 'INSERT'); 
-    
-	// return $insertSQL;
-}
+addNeighborhoodName($clean);
 
 ?>
