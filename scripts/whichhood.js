@@ -26,6 +26,7 @@ function onEachFeature(feature, layer) {
   map.panTo(pointLoc); 
   map.setZoom(13);
   $("#neighborhood input[name=block]").val(feature.properties.bbcode);
+  $("#spinner").hide(20);
 }
 
 // pass the neighborhood to be saved
@@ -40,13 +41,18 @@ $(document).ready(function() {
 
   // load first point once user is ready to start  
   $('#start').click(function (event){ 
+  $('#nabeform').show();
+  $("#spinner").show();
   getPoint();
   $('#nabearea').focus();
+  
   });
   
   // intercept the form submission
   $("#neighborhood").submit(function (event){ 
-        
+    
+    $("#spinner").show();
+      
     //avoid submitting bad data
     var givenName = $("#neighborhood input[name=neighborhood]").val();
     var blockid = $("#neighborhood input[name=block]").val();
@@ -64,6 +70,7 @@ $(document).ready(function() {
   	
   //skip if not sure
   $('#skip').bind('click', function() {
+    $("#spinner").show();
     getPoint();
   });
 

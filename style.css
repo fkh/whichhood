@@ -15,6 +15,14 @@ div#submission {
   background: white; 
   padding: 20px; }
   
+div#nabeform {
+  display: none;
+}
+
+#spinner {
+  display: none;
+}
+
 .bigbutton {
   background: white; 
   color: black; 

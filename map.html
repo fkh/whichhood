@@ -24,14 +24,16 @@
 <div id='submission'>
   <p><a href="#" id="start">Start</a></p>
   <p><a href="view.html">View results</a></p>
-  <hr/>
+  <div id="nabeform">
   <p>What neighborhood is this location in?</p>
   <form id="neighborhood">
   <p><input type="text" id="nabearea" name="neighborhood" value="neighborhood" onFocus="this.value='';"></input></p>
   <input type="hidden" name="block" value="" ></input>
   <input type="submit" value="Name it!" >
   <input type="button" id="skip" value="Not sure, skip it.">
+  <span id="spinner"><em>loading...</em></span>
   </form>
+  </div>
 </div>
 
 <script type="text/javascript">
