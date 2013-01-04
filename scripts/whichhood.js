@@ -41,11 +41,11 @@ $(document).ready(function() {
 
   // load first point once user is ready to start  
   $('#start').click(function (event){ 
-  $('#nabeform').show();
-  $("#spinner").show();
-  getPoint();
-  $('#nabearea').focus();
-  
+    $('#start').hide();
+    $('#nabeform').show();
+    $("#spinner").show();
+    getPoint();
+    $('#nabearea').focus();
   });
   
   // intercept the form submission
@@ -72,6 +72,7 @@ $(document).ready(function() {
   $('#skip').bind('click', function() {
     $("#spinner").show();
     getPoint();
+    $('#nabearea').focus();
   });
 
 });
