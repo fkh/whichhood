@@ -5,7 +5,7 @@ var markers = new L.featureGroup();
 
 // get a point from the database
 function getPoint() {
-  
+    
   $.ajax({
       type: "POST",
       url: "point.php",
@@ -56,7 +56,6 @@ $(document).ready(function() {
     //avoid submitting bad data
     var givenName = $("#neighborhood input[name=neighborhood]").val();
     var blockid = $("#neighborhood input[name=block]").val();
-    console.log(blockid);
     if 	(givenName == "" || givenName == null || !isNaN(givenName) || givenName.charAt(0) == ' ') {
       $('#neighborhood input[name=neighborhood]').focus();
       return false; 
