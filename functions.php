@@ -36,14 +36,22 @@ function carto($query, $geojson) {
   
 }
 
-
 // get the random point to seed the map, called by point.php
-
 function getRandomPoint() {
   
   //prevent query caching by fetching a random point
   $cartodbid = rand(1,8408);
-  $get_random_point = "SELECT * FROM bkblocks WHERE cartodb_id = " . $cartodbid . " limit 1";
+  $get_random_point = "SELECT * FROM bkblocks WHERE cartodb_id = {$cartodbid} limit 1";
+  $result = carto($get_random_point, TRUE);
+	return $result;
+	
+}
+
+// get a bounded point
+function getRandomBoundedPoint() {
+  
+  $get_random_point = "SELECT * FROM bkblocks WHERE ";
+ // $get_random_point .= "bkblocks.the_geom && ST_MakeEnvelope(" . 10.9351, 49.3866, 11.201, 49.5138, 4326);cartodb_id = " . $cartodbid . " limit 1";
   $result = carto($get_random_point, TRUE);
 	return $result;
 	
@@ -56,11 +64,7 @@ function addNeighborhoodName($name, $block) {
 
   $timestamp = time();
   
-  $sql = "INSERT INTO NAMES (neighborhood, block, timestamp) VALUES (";
-  $sql .= "'" . $name . "'" ;
-  $sql .= ", '" . $block . "' " ;
-  $sql .= ", " . $timestamp ; 
-  $sql .= ")";
+  $sql = "INSERT INTO NAMES (neighborhood, block, timestamp) VALUES ('{$name}', '{$block}', {$timestamp})";
   
   carto($sql, FALSE);
   
