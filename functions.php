@@ -1,7 +1,5 @@
 <?php
 
-getNeighborhoods();
-
 function carto($query, $geojson) {
   
   // run any cartodb query
@@ -16,7 +14,7 @@ function carto($query, $geojson) {
   $sql_query = urlencode($query);
 
   $carto_url = $carto_root . $format . "q=" . $sql_query . "&api_key=" . $api_key ;
-
+  
   // doing the curl...
   $ch = curl_init();
   
@@ -48,11 +46,14 @@ function getRandomPoint() {
 }
 
 // get a bounded point
-function getRandomBoundedPoint() {
+function getRandomBoundedPoint($x1, $y1, $x2, $y2) {
   
-  $get_random_point = "SELECT * FROM bkblocks WHERE ";
- // $get_random_point .= "bkblocks.the_geom && ST_MakeEnvelope(" . 10.9351, 49.3866, 11.201, 49.5138, 4326);cartodb_id = " . $cartodbid . " limit 1";
+  $timestamp = time();
+    
+  $get_random_point = "SELECT *,'{$timestamp}' FROM bkblocks WHERE bkblocks.the_geom && ST_MakeEnvelope({$x1}, {$y1}, {$x2}, {$y2}, 4326) order by random() limit 1";
+  
   $result = carto($get_random_point, TRUE);
+  
 	return $result;
 	
 }
