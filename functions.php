@@ -4,7 +4,7 @@ function carto($query, $geojson) {
   
   // run any cartodb query
   
-  $api_key = '74921862200323be9009bcf748adfdee8f5e0a57';
+  $api_key = '';
   $carto_root = 'http://fkh.cartodb.com/api/v2/sql?';
   
   if ($geojson == TRUE) {
