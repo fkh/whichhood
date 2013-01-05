@@ -1,5 +1,6 @@
 var geojsonLayer = new L.geoJson();	
 var markers = new L.featureGroup();
+var bounds = new L.LatLngBounds;
 
 //-- FUNCTIONS --//
 
@@ -19,13 +20,41 @@ function getPoint() {
   });
 };
 
+// get a point from the database, including the current map bounds.
+function getBoundedPoint() {
+    
+  bounds = map.getBounds();
+  var bbox = bounds.toBBoxString();
+  
+  console.log(bbox);
+  
+  $.ajax({
+      type: "POST",
+      url: "point.php",
+      data: { 
+              'bounds': bbox
+            },
+      dataType: 'json',
+      success: function (response) {
+        markers.removeLayer(geojsonLayer);
+        geojsonLayer = L.geoJson(response, {
+          onEachFeature: onEachFeature
+        }).addTo(map);
+      }
+  });
+};
+
 // geojson coords are reversed, so swap them and pan to the location of the recently-added marker
 // also update the hidden blockid field with the bbcode of the recently-gathered point
 function onEachFeature(feature, layer) {
   var pointLoc = feature.geometry.coordinates.reverse();
-  map.panTo(pointLoc); 
-  map.setZoom(13);
-  $("#neighborhood input[name=block]").val(feature.properties.bbcode);
+  
+  //if user has zoomed in, don't change anything
+  if (map.getZoom() <= 14) {
+    map.panTo(pointLoc);
+    map.setZoom(14);    
+  }
+  $("#neighborhood input[name=block]").val(feature.properties.block);
   $("#spinner").hide(20);
 }
 
@@ -44,7 +73,7 @@ $(document).ready(function() {
     $('#start').hide();
     $('#nabeform').show();
     $("#spinner").show();
-    getPoint();
+    getBoundedPoint();
     $('#nabearea').focus();
   });
   
@@ -61,7 +90,7 @@ $(document).ready(function() {
       return false; 
     } else {
       passName(givenName, blockid);  
-      getPoint();
+      getBoundedPoint();
       $('#neighborhood input[name=neighborhood]').focus();
   	  return false; 
   	}
@@ -70,7 +99,7 @@ $(document).ready(function() {
   //skip if not sure
   $('#skip').bind('click', function() {
     $("#spinner").show();
-    getPoint();
+    getBoundedPoint();
     $('#nabearea').focus();
   });
 

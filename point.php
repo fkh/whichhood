@@ -1,8 +1,20 @@
 <?php
   include('functions.php');
 
-	$mapPoint = getRandomPoint();
+  if ($_POST['bounds'] <> '') { 
+    // we have bounds so we should get a bounded point
+  
+  $bounds = mysql_real_escape_string($_POST['bounds']);
+  
+	$mapPoint = getRandomBoundedPoint($bounds);
 	
-	print($mapPoint);
-	
+} else {
+  // no bounds, just get a point anywhere
+  
+  $mapPoint = getRandomPoint();
+  	
+}
+
+print($mapPoint);
+
 ?>

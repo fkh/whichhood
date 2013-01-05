@@ -45,12 +45,12 @@ function getRandomPoint() {
 	
 }
 
-// get a bounded point
-function getRandomBoundedPoint($x1, $y1, $x2, $y2) {
+// get a bounded point. $bounds is a bbox string.
+function getRandomBoundedPoint($bounds) {
   
   $timestamp = time();
     
-  $get_random_point = "SELECT *,'{$timestamp}' FROM bkblocks WHERE bkblocks.the_geom && ST_MakeEnvelope({$x1}, {$y1}, {$x2}, {$y2}, 4326) order by random() limit 1";
+  $get_random_point = "SELECT *,'{$timestamp}' FROM bkblocks WHERE bkblocks.the_geom && ST_MakeEnvelope({$bounds}, 4326) order by random() limit 1";
   
   $result = carto($get_random_point, TRUE);
   
