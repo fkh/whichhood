@@ -38,7 +38,7 @@ function carto($query, $geojson) {
 function getRandomPoint() {
   
   //prevent query caching by fetching a random point
-  $cartodbid = rand(1,8408);
+  $cartodbid = rand(1,23821);
   $get_random_point = "SELECT * FROM bkblocks WHERE cartodb_id = {$cartodbid} limit 1";
   $result = carto($get_random_point, TRUE);
 	return $result;
