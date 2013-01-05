@@ -53,6 +53,7 @@ function onEachFeature(feature, layer) {
   if (map.getZoom() <= 14) {
     map.panTo(pointLoc);
     map.setZoom(14);    
+  } else {
   }
   $("#neighborhood input[name=block]").val(feature.properties.block);
   $("#spinner").hide(20);
@@ -63,6 +64,14 @@ function onEachFeature(feature, layer) {
     $.post("new.php", { neighborhood: neighborhood, block: block} );
 	};
 	
+	function lockZoom() {	  
+	  if (map.getZoom() <= 14) { 
+      $("#locked-warning").hide();
+    } else {
+      $("#locked-warning").show();    
+    }
+    
+	}
 	
 //-- JQUERY --//
 

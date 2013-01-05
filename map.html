@@ -30,7 +30,7 @@
   <p><input type="text" id="nabearea" name="neighborhood" value="neighborhood" onFocus="this.value='';"></input></p>
   <input type="hidden" name="block" value="" ></input>
   <input type="submit" value="Name it!" >
-  <input type="button" id="skip" value="Not sure, skip it.">
+  <input type="button" id="skip" value="Not sure, skip it."> <span id="locked-warning"><em>(viewfinder is locked)</em></span>
   <span id="spinner"><em>loading...</em></span>
   </form>
   </div>
@@ -49,6 +49,10 @@
   
   markers.addLayer(geojsonLayer);
   map.addLayer(markers);
+  
+  map.on('viewreset', function() {
+      lockZoom();
+  });
     
 </script>
 </body>

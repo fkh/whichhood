@@ -23,6 +23,9 @@ div#nabeform {
   display: none;
 }
 
+#locked-warning {
+  display: none;
+}
 .bigbutton {
   background: white; 
   color: black; 
