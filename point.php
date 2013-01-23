@@ -4,7 +4,7 @@
   if ($_POST['bounds'] <> '') { 
     // we have bounds so we should get a bounded point
   
-  $bounds = mysql_real_escape_string($_POST['bounds']);
+  $bounds = pg_escape_string($_POST['bounds']);
   
 	$mapPoint = getRandomBoundedPoint($bounds);
 	
