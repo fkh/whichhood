@@ -3,8 +3,11 @@
 function carto($query, $geojson) {
   
   // run any cartodb query
+
+  include('api.php');
   
-  $api_key = '';
+  $api_key = $cartoapi;
+  
   $carto_root = 'http://fkh.cartodb.com/api/v2/sql?';
   
   if ($geojson == TRUE) {
@@ -22,9 +25,7 @@ function carto($query, $geojson) {
   curl_setopt($ch, CURLOPT_HEADER, FALSE);
   curl_setopt($ch, CURLOPT_VERBOSE, FALSE);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-  
-  //print $carto_url;
-  
+    
   $carto_result = curl_exec($ch);
   
   // close cURL resource, and free up system resources
@@ -65,7 +66,7 @@ function addNeighborhoodName($name, $block) {
 
   $timestamp = time();
   
-  $sql = "INSERT INTO NAMES (neighborhood, block, timestamp) VALUES ('{$name}', '{$block}', {$timestamp})";
+  $sql = "INSERT INTO NAMES (neighborhood, block, timestamp) VALUES ('{$name}', {$block}, {$timestamp})";
   
   carto($sql, FALSE);
   
