@@ -2,6 +2,7 @@ var geojsonLayer = new L.geoJson();
 var markers = new L.featureGroup();
 var bounds = new L.LatLngBounds;
 
+
 //-- FUNCTIONS --//
 
 // get a point from the database
@@ -25,9 +26,7 @@ function getBoundedPoint() {
     
   bounds = map.getBounds();
   var bbox = bounds.toBBoxString();
-  
-  console.log(bbox);
-  
+    
   $.ajax({
       type: "POST",
       url: "point.php",
