@@ -4,14 +4,21 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>brooklyn.whichhood.org</title>
+	<title>whichhood.org</title>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+  
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+  <!--[if lte IE 8]>
+      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
+  <![endif]-->
 
-  <script src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js"></script>
-	
+  <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+  
+  <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.3"></script>
+  	
 	<script type="text/javascript" src="scripts/whichhood.js"></script>
 	
 	<LINK href="style.css" rel="stylesheet" type="text/css"></LINK>
@@ -20,22 +27,39 @@
 </head>
 <body>
 
-<div id='map'></div>
-<div id='submission'>
-  <p><a href="#" id="start">Start</a></p>
-  <p><a href="view.html">View results</a></p>
+<div id='submission-wide'>
+  <h1>Whichhood</h1>
+  <p id="start"><a href="#">Start...</a> <a href="#" class="help">More info.</a></p>
   <div id="nabeform">
-  <p>What neighborhood is this location in?</p>
   <form id="neighborhood">
-  <p><input type="text" id="nabearea" name="neighborhood" value="neighborhood" onFocus="this.value='';"></input></p>
+  What neighborhood is this location in? <input type="text" class="bigtext" id="nabearea" name="neighborhood" value="neighborhood" onFocus="this.value='';"></input>
   <input type="hidden" name="block" value="" ></input>
-  <input type="submit" value="Name it!" >
-  <input type="button" id="skip" value="Not sure, skip it."> <span id="locked-warning"><em>(viewfinder is locked)</em></span>
-  <span id="spinner"><em>loading...</em></span>
+  <input type="submit" class="bigbutton" value="Name it!" >
+  <input type="button" class="bigbutton" id="skip" value="Not sure, skip it."> <span id="locked-warning"><em>(viewfinder is locked)</em></span>
+  <span id="spinner"><em>loading...</em></span> <a href="view.html">Explore results</a>. <a href="#" class="help">More info.</a></p>
   </form>
   </div>
 </div>
 
+<div id='map'></div>
+
+<div id="about">
+<p>WhichHood.org is an experimental sketch for a collaborative neighborhood mapping tool.</p>
+<p>High-quality neighborhood boundaries could form the basis for many civic apps -- news, issue reporting, local retail, planning, etc. But those maps don't exist. Any available data typically represent an administrative or real estate focused view. The "official" boundaries don't adapt and grow as rapidly as neighborhoods do in our daily use. What if a community data source existed, generated from thousands of individual contributions? What if adding data to that resource was kinda fun? Maybe a bit competitive? A game?</p>
+
+<p>Drawing actual boundaries for neighborhoods is hard: you don't always know the other side of a neighborhood edge, only the one closest to you. Instead, whichhood.org asks you to identify neighborhoods block by block.</p>
+	
+<p>whichhood.org was created by <a href="http://holobiont.org">Holobiont</a> at the Great Urban Hack, November 6/7, 2010. <a href="https://github.com/fkh/whichhood">Source on github</a>. Feedback invited to <a href="twitter.com/fkh">@fkh</a>.</p>
+
+<p><a href="#" class="help">Hide this  section.</a></p>
+</div>
+
+<!-- 
+<div id='credits'>
+  Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
+  </div>
+-->
+  
 <script type="text/javascript">
   
   var map = new L.Map('map');
@@ -44,8 +68,22 @@
 	var osmAttrib='Map data © OpenStreetMap contributors';
 	var osm = new L.TileLayer(osmUrl, {minZoom: 1, maxZoom: 16, attribution: osmAttrib});
 	
+  // custom icon
+  var locationIcon = L.icon({
+      iconUrl: 'marker.png',
+      iconSize:     [38, 95], // size of the icon
+      shadowSize:   [50, 64], // size of the shadow
+      iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+      shadowAnchor: [4, 62],  // the same for the shadow
+      popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+  });
+  
+	// stamen toner tiles!
+	var toner = new L.StamenTileLayer('toner');
+  map.addLayer(toner);
+	
   map.setView(new L.LatLng(40.75, -73.9), 11);
-  map.addLayer(osm);
+  // map.addLayer(osm);
   
   markers.addLayer(geojsonLayer);
   map.addLayer(markers);
@@ -53,7 +91,10 @@
   map.on('viewreset', function() {
       lockZoom();
   });
+  
+  
     
 </script>
+
 </body>
 </html>

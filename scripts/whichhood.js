@@ -2,6 +2,8 @@ var geojsonLayer = new L.geoJson();
 var markers = new L.featureGroup();
 var bounds = new L.LatLngBounds;
 
+var zoomLockLevel = 15;
+var startZoom = 13;
 
 //-- FUNCTIONS --//
 
@@ -13,9 +15,19 @@ function getPoint() {
       url: "point.php",
       dataType: 'json',
       success: function (response) {
-        markers.removeLayer(geojsonLayer);
+        geojsonLayer.clearLayers();
         geojsonLayer = L.geoJson(response, {
-          onEachFeature: onEachFeature
+          pointToLayer: function(feature, latlng) {
+              return L.marker(latlng, {
+                icon: L.icon({
+                  iconSize: [27, 27],
+                  iconAnchor: [13, 27],
+                  popupAnchor:  [1, -24], 
+                  iconUrl: "marker.png"
+                })
+              })
+            },
+          onEachFeature: onEachFeature,
         }).addTo(map);
       }
   });
@@ -36,6 +48,7 @@ function getBoundedPoint() {
       dataType: 'json',
       success: function (response) {
         markers.removeLayer(geojsonLayer);
+        geojsonLayer.clearLayers();
         geojsonLayer = L.geoJson(response, {
           onEachFeature: onEachFeature
         }).addTo(map);
@@ -48,12 +61,18 @@ function getBoundedPoint() {
 function onEachFeature(feature, layer) {
   var pointLoc = feature.geometry.coordinates.reverse();
   
+  map.panTo(pointLoc);
+
   //if user has zoomed in, don't change anything
-  if (map.getZoom() <= 14) {
-    map.panTo(pointLoc);
-    map.setZoom(14);    
-  } else {
-  }
+  if (map.getZoom() != startZoom) {
+        
+    if (map.getZoom() >= zoomLockLevel) {
+    //  lockZoom();
+    } else {
+
+    }
+  } 
+  
   $("#neighborhood input[name=block]").val(feature.properties.block);
   $("#spinner").hide(20);
 }
@@ -64,7 +83,7 @@ function onEachFeature(feature, layer) {
 	};
 	
 	function lockZoom() {	  
-	  if (map.getZoom() <= 14) { 
+	  if (map.getZoom() <= zoomLockLevel) { 
       $("#locked-warning").hide();
     } else {
       $("#locked-warning").show();    
@@ -81,7 +100,7 @@ $(document).ready(function() {
     $('#start').hide();
     $('#nabeform').show();
     $("#spinner").show();
-    getBoundedPoint();
+    getPoint();
     $('#nabearea').focus();
   });
   
@@ -95,10 +114,11 @@ $(document).ready(function() {
     var blockid = $("#neighborhood input[name=block]").val();
     if 	(givenName == "" || givenName == null || !isNaN(givenName) || givenName.charAt(0) == ' ') {
       $('#neighborhood input[name=neighborhood]').focus();
+      $("#spinner").hide(20);
       return false; 
     } else {
       passName(givenName, blockid);  
-      getBoundedPoint();
+      getPoint();
       $('#neighborhood input[name=neighborhood]').focus();
   	  return false; 
   	}
@@ -107,8 +127,12 @@ $(document).ready(function() {
   //skip if not sure
   $('#skip').bind('click', function() {
     $("#spinner").show();
-    getBoundedPoint();
+    getPoint();
     $('#nabearea').focus();
+  });
+  
+  $('.help').click(function (event){ 
+   $('#about').toggle(); 
   });
 
 });

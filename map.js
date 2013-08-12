@@ -78,7 +78,7 @@ var mapStyle = [
 			$('#add-block input[name=neighborhood]').focus();
 			$.getJSON("point.php", function(data){
 			    centerMap(data.x, data.y);
-				bBCode = data.id;
+				bBCode = data.id; // wow, not block...
 			 });
 		};
 	

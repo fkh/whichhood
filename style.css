@@ -1,20 +1,44 @@
 body {
     padding: 0;
     margin: 0;
-}
-
-html, body {
     height: 100%;
+    font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
 }
 
-div#submission { 
+h1 {
+  color: #d00509;
+  font-weight: 700;
+}
+
+a {
+  color: #fbbc1f;
+  text-decoration: none;
+}
+
+#submission { 
   position: absolute; 
   top: 10px; 
   left: 10px; 
   z-index: 99;
   background: white; 
+  border-style: solid;
+  border-color: #d00509;
+  border-width: 2px;
   padding: 20px; }
   
+#submission-wide { 
+  position: absolute; 
+  padding-left: 20px;
+  width: 100%; 
+  z-index: 99;
+  background: white; 
+  border-bottom: 4px solid #d00509; 
+  }
+
+#results {
+  float:right;
+}
+
 div#nabeform {
   display: none;
 }
@@ -26,24 +50,41 @@ div#nabeform {
 #locked-warning {
   display: none;
 }
+
 .bigbutton {
   background: white; 
   color: black; 
   font-size: 1.2em;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+  font-weight: 700;
 }
 
 input.bigtext {
 	color:#7A8872;
 	padding:10px;
-	width:580px;
-	font-size: 150%;
-	text-align: center;
+	width:; 30%;
+	font-size: 1.2em;
+	text-align: left;
+	font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 #map {
     position: absolute;
-    top: 0; /* if you have a 200px block at the top */
+    top: 100px;
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+#about {
+  display: none;
+  position: absolute;
+  top: 100px;
+  width: 100%;
+  padding: 20px;
+  background: white; 
+  border-bottom: 4px solid #fbbc1f;
+}
+
+.help {
 }
