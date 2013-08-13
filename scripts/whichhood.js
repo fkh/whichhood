@@ -134,5 +134,5 @@ $(document).ready(function() {
   $('.help').click(function (event){ 
    $('#about').toggle(); 
   });
-
+  
 });
