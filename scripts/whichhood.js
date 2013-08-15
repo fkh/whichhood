@@ -127,8 +127,11 @@ $(document).ready(function() {
   //skip if not sure
   $('#skip').bind('click', function() {
     $("#spinner").show();
-    getPoint();
-    $('#nabearea').focus();
+    var blockid = $("#neighborhood input[name=block]").val();
+     passName("Skipped", blockid);  
+      getPoint();
+      $('#neighborhood input[name=neighborhood]').focus();
+  	  return false;
   });
   
   $('.help').click(function (event){ 
